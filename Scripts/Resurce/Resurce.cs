@@ -29,7 +29,7 @@ private WaitForSeconds _dieDelayWait;
 
     private IEnumerator DieDelay()
     {
-        yield return _dieDelay;
+        yield return _dieDelayWait;
 
         Died?.Invoke(this);
     }
