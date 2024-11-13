@@ -81,6 +81,7 @@ public class UnitTrailer : MonoBehaviour
 
         _resurce.transform.parent = null;
         _resurce.GetComponent<Rigidbody>().isKinematic = false;
+        _resurce.Die();
         _resurce = null;
     }
 }

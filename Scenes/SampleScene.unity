@@ -1078,7 +1078,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _speed: 25
-  _rotationSpeed: 100
+  _rotationSpeed: 80
   _borderScreen: 30
   _zoomSpeed: 10
   _camera: {fileID: 963194227}
