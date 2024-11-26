@@ -4,20 +4,20 @@ using UnityEngine;
 
 public class ResurceSpawner : MonoBehaviour
 {
-    [SerializeField] private Resurce _resurcePrefab;
+    [SerializeField] private Resource _resurcePrefab;
     [SerializeField] private int _maxNumberPosition;
     [SerializeField] private int _minNumberPosition;
     [SerializeField] private float _spawnDelay;
 
-    private Spawner<Resurce> _spawner;
+    private Spawner<Resource> _spawner;
     private WaitForSeconds _spawnWait;
     private float _maxRayCastDistance = 50;
 
-    public event Action<Resurce> ResurceSpawned;
+    public event Action<Resource> ResurceSpawned;
 
     private void Awake()
     {
-        _spawner = new Spawner<Resurce>(_resurcePrefab);
+        _spawner = new Spawner<Resource>(_resurcePrefab);
         _spawnWait = new WaitForSeconds(_spawnDelay);
     }
 
@@ -30,36 +30,45 @@ public class ResurceSpawner : MonoBehaviour
     {
         while (enabled)
         {
-            Vector3 newSpawnPosition = new Vector3(GetRandomPosition(), 0, GetRandomPosition());
+            Resource resource = _spawner.Spawn(NewSpawnPosition());
+            resource.gameObject.SetActive(true);
+            resource.TryGetComponent(out Rigidbody resurceRigidbody);
+            resurceRigidbody.isKinematic = true;
 
-            GetPositionY(ref newSpawnPosition);
+            resource.Died += ReturnResurceInSpawner;
 
-            Resurce resurce = _spawner.Spawn(newSpawnPosition);
-            resurce.gameObject.SetActive(true);
-            resurce.GetComponent<Rigidbody>().isKinematic = true;
-
-            resurce.Died += ReturnResurceInSpawner;
-
-            ResurceSpawned?.Invoke(resurce);
+            ResurceSpawned?.Invoke(resource);
+            
             yield return _spawnWait;
         }
     }
 
-    private void ReturnResurceInSpawner(Resurce resurce)
+    private Vector3 NewSpawnPosition()
+    {
+        Vector3 newSpawnPosition = new Vector3(GetRandomNumber(), 0, GetRandomNumber());
+
+        SetPositionY(ref newSpawnPosition);
+        return newSpawnPosition;
+    }
+
+    private void ReturnResurceInSpawner(Resource resurce)
     {
         _spawner.ReturnObjectInPool(resurce);
         resurce.Died -= ReturnResurceInSpawner;
     }
 
-    private void GetPositionY(ref Vector3 newSpawnPosition)
+    private void SetPositionY(ref Vector3 newSpawnPosition)
     {
         if (Physics.Raycast(newSpawnPosition + Vector3.up * _maxRayCastDistance, Vector3.down, out RaycastHit hit, _maxRayCastDistance))
         {
-            newSpawnPosition.y = hit.point.y;
+            if (hit.collider.TryGetComponent<Terrain>(out _))
+            {  
+                newSpawnPosition.y = hit.point.y;
+            }
         }
     }
 
-    private float GetRandomPosition()
+    private float GetRandomNumber()
     {
         return UnityEngine.Random.Range(_minNumberPosition, _maxNumberPosition);
     }

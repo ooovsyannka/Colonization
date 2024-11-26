@@ -1,18 +1,17 @@
 ﻿using System;
 using System.Collections;
-using UnityEditorInternal;
 using UnityEngine;
 
-[RequireComponent (typeof(Collider), typeof(Rigidbody))]
+[RequireComponent(typeof(Collider), typeof(Rigidbody))]
 
-public class Resurce : MonoBehaviour 
+public class Resource : MonoBehaviour
 {
     [SerializeField] private float _timeToDie;
 
     private Coroutine _dieDelay;
-private WaitForSeconds _dieDelayWait;
+    private WaitForSeconds _dieDelayWait;
 
-    public event Action<Resurce> Died;
+    public event Action<Resource> Died;
 
     private void Awake()
     {
@@ -21,7 +20,7 @@ private WaitForSeconds _dieDelayWait;
 
     public void Die()
     {
-        if(_dieDelay != null)
+        if (_dieDelay != null)
             StopCoroutine(_dieDelay);
 
         _dieDelay = StartCoroutine(DieDelay());

@@ -1,48 +1,50 @@
-﻿using UnityEngine;
+﻿using System;
+using System.Collections;
+using TMPro.EditorUtilities;
+using Unity.VisualScripting;
+using UnityEngine;
+using static UnityEngine.UI.CanvasScaler;
 
 [RequireComponent(typeof(UnitMover))]
-
 public class Unit : MonoBehaviour
 {
     [SerializeField] private UnitTrailer _trailer;
     [SerializeField] private UnitAnimation _animation;
 
     private UnitMover _mover;
-    private TowerUnitHolder _towerUnitHolder;
-    
-    private void Update()
-    {
-        _animation.PlayAnimation(_mover.IsMove);
-    }
+
+    public event Action<Unit> ResourceDelivered;
+
 
     private void Awake()
     {
         _mover = GetComponent<UnitMover>();
     }
 
-    private void OnEnable()
+    private void Update()
     {
-        _mover.ArriveAtResurce += _trailer.UploadResurce;
-        _trailer.ResurceUploaded += _mover.StartMoveToBase;
-        _mover.ArriveAtBase += _trailer.UnloadResurce;
-        _trailer.ResurceUnloaded += ReturnInUnitHolder;
+        _animation.PlayAnimation(_mover.IsMove);
     }
 
-    private void OnDisable()
+    public void StartDeliveryResource(Resource resource)
     {
-        _mover.ArriveAtResurce -= _trailer.UploadResurce;
-        _trailer.ResurceUploaded -= _mover.StartMoveToBase;
-        _mover.ArriveAtBase -= _trailer.UnloadResurce;
-        _trailer.ResurceUnloaded -= ReturnInUnitHolder;
+        StartCoroutine(DeliveryResource(resource));
     }
 
-    public void GetTowerUnitHolder(TowerUnitHolder towerUnitHolder)
+    private IEnumerator DeliveryResource(Resource resource)
     {
-        _towerUnitHolder = towerUnitHolder;
-    }
+        yield return _mover.MoveToResurce(resource);
+        
+        _animation.PlayProcessing();
 
-    private void ReturnInUnitHolder()
-    {
-        _towerUnitHolder.ReturnUnit(this);
+        yield return _trailer.UploadResurce(resource);
+
+        yield return _mover.MoveToBase();
+
+        _animation.PlayProcessing();
+        
+        yield return _trailer.UnloadResurce();
+
+        ResourceDelivered?.Invoke(this);
     }
 }

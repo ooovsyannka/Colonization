@@ -4,13 +4,15 @@ using UnityEngine;
 
 public class TowerUnitHolder : MonoBehaviour
 {
-    [SerializeField] private UnitSpawner _unitSpawner;
+    [SerializeField] private UnitFabric _unitSpawner;
     [SerializeField] private List<Transform> _unitPlaces;
 
     private Queue<Unit> _activeUnits;
 
+    public bool HasActiveUnits { get { return _activeUnits.Count != 0; } }
+
     public event Action UnitReturned;
-    
+
     private void Awake()
     {
         _activeUnits = new Queue<Unit>();
@@ -21,7 +23,6 @@ public class TowerUnitHolder : MonoBehaviour
         for (int i = 0; i < _unitPlaces.Count; i++)
         {
             Unit unit = _unitSpawner.SpawnUnit(_unitPlaces[i].position);
-            unit.GetTowerUnitHolder(this);
 
             _activeUnits.Enqueue(unit);
         }
@@ -31,9 +32,10 @@ public class TowerUnitHolder : MonoBehaviour
     {
         unit = null;
 
-        if (_activeUnits.Count > 0)
+        if (TryGetActiveUnit(out unit))
         {
-            unit = _activeUnits.Dequeue();
+            unit.ResourceDelivered += ReturnUnit;
+
             return true;
         }
 
@@ -44,5 +46,19 @@ public class TowerUnitHolder : MonoBehaviour
     {
         _activeUnits.Enqueue(unit);
         UnitReturned?.Invoke();
+        unit.ResourceDelivered -= ReturnUnit;
+    }
+
+    private bool TryGetActiveUnit(out Unit desiredUnit)
+    {
+        desiredUnit = null;
+
+        if (_activeUnits.Count > 0)
+        {
+            desiredUnit = _activeUnits.Dequeue();
+            return true;
+        }
+
+        return false;
     }
 }

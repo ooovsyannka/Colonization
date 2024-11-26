@@ -1,47 +1,43 @@
-using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public class Tower : MonoBehaviour
 {
-    [SerializeField] private TowerScaner _scaner;
+    [SerializeField] private Scaner _scaner;
     [SerializeField] private TowerUnitHolder _unitHolder;
-    [SerializeField] private TowerCounter _counter;
-
-    private Queue<Resurce> _resurcePositions;
-
-    private void Awake()
-    {
-        _resurcePositions = new Queue<Resurce>();
-    }
+    [SerializeField] private TowerResourceHolder _resourceHolder;
 
     private void OnEnable()
     {
-        _scaner.ResurceDetected += AddResurcePosition;
+        _scaner.ResourceDetected += TryAddResurce;
         _unitHolder.UnitReturned += TrySendUnitForResurce;
-        _unitHolder.UnitReturned += _counter.CountUpdate;
     }
 
     private void OnDisable()
     {
-        _scaner.ResurceDetected -= AddResurcePosition;
+        _scaner.ResourceDetected -= TryAddResurce;
         _unitHolder.UnitReturned -= TrySendUnitForResurce;
-        _unitHolder.UnitReturned -= _counter.CountUpdate;
     }
 
-    private void AddResurcePosition(Resurce resurce)
+    private void TryAddResurce(Resource detectedResource)
     {
-        _resurcePositions.Enqueue(resurce);
-
-        TrySendUnitForResurce();
+        if (_resourceHolder.CanAddResurce(detectedResource))
+        {
+            _resourceHolder.AddResurce(detectedResource);
+            TrySendUnitForResurce();
+        }
     }
 
     private void TrySendUnitForResurce()
     {
-        if (_resurcePositions.Count > 0)
-        { 
-            if (_unitHolder.TrySendActiveUnit(out Unit unit))
+        if (_unitHolder.HasActiveUnits)
+        {
+            if (_resourceHolder.TryGetFreeResurce(out Resource resource))
             {
-                unit.GetComponent<UnitMover>().StartMoveToResurce(_resurcePositions.Dequeue());
+                if (_unitHolder.TrySendActiveUnit(out Unit unit))
+                {
+                    unit.StartDeliveryResource(resource);
+                }
             }
         }
     }

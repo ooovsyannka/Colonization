@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
-using static UnityEngine.GraphicsBuffer;
 
 public class UnitMover : MonoBehaviour
 {
@@ -10,60 +10,47 @@ public class UnitMover : MonoBehaviour
     [SerializeField] private float _speedRotation;
 
     private Coroutine _moveTo;
-    private Vector3 _basePositon;
+    private Vector3 _basePosition;
 
     public bool IsMove { get; private set; }
 
-    public event Action<Resurce> ArriveAtResurce;
+    public event Action ArriveAtResurce;
     public event Action ArriveAtBase;
 
     private void OnEnable()
     {
-        _basePositon = transform.position;
+        _basePosition = transform.position;
     }
 
-    public void StartMoveToBase()
+    public Coroutine MoveToResurce(Resource resurce)
+    {
+        return StartMoveTo(resurce.transform.position, ArriveAtResurce);
+    }
+
+    public Coroutine MoveToBase()
+    {
+        return StartMoveTo(_basePosition, ArriveAtBase);
+    }
+
+    private Coroutine StartMoveTo(Vector3 targetPosition, Action arriveAt)
     {
         if (_moveTo != null)
             StopCoroutine(_moveTo);
 
-        _moveTo = StartCoroutine(MoveToBase());
+        return StartCoroutine(MoveTo(targetPosition, arriveAt));
     }
 
-    public void StartMoveToResurce(Resurce resurce)
+    private IEnumerator MoveTo(Vector3 targetPosition, Action arriveAt)
     {
-        if (_moveTo != null)
-            StopCoroutine(_moveTo);
-
-        _moveTo = StartCoroutine(MoveToResurce(resurce));
-    }
-
-    private IEnumerator MoveToResurce(Resurce resurce)
-    {  
-        Vector3 resurcePosition = new Vector3(resurce.transform.position.x, resurce.transform.position.y, resurce.transform.position.z);
-
-        while (IsArrived(resurcePosition) == false)
+        while (IsArrived(targetPosition) == false)
         {
-            Move(resurcePosition);
+            Move(targetPosition);
 
             yield return null;
         }
 
         IsMove = false;
-        ArriveAtResurce?.Invoke(resurce);
-    }
-
-    private IEnumerator MoveToBase()
-    {
-        while (IsArrived(_basePositon) == false)
-        {
-            Move(_basePositon);
-
-            yield return null;
-        }
-
-        IsMove = false;
-        ArriveAtBase?.Invoke();
+        arriveAt?.Invoke();
     }
 
     private void Move(Vector3 targetPosition)

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using UnityEngine;
 
 public class UnitTrailer : MonoBehaviour
@@ -8,80 +7,49 @@ public class UnitTrailer : MonoBehaviour
     [SerializeField] private Transform _resurseParent;
 
     private Coroutine _processingDelay;
-    private Coroutine _uploadDelay;
-    private Coroutine _unloadDelay;
     private WaitForSeconds _processingWait;
-    private WaitForSeconds _transmitWait;
-    private Resurce  _resurce;
-
-    public bool IsUpload { get; private set; }
-
-    public event Action ResurceUploaded;
-    public event Action ResurceUnloaded;
+    private WaitForSeconds _halfProcessingWait;
+    private Resource _resource;
 
     private void Awake()
     {
-        float divisionDuration = 2;
+        int divisionAnimationLength = 2;
 
         _processingWait = new WaitForSeconds(_animation.ProcessingAnimationDuration.length);
-        _transmitWait = new WaitForSeconds(_animation.ProcessingAnimationDuration.length / divisionDuration);
+        _halfProcessingWait = new WaitForSeconds(_animation.ProcessingAnimationDuration.length / divisionAnimationLength);
     }
 
-    public void UploadResurce(Resurce resurce)
+    public Coroutine UploadResurce(Resource resource)
     {
-        _resurce = resurce;
-        _animation.PlayProcessing();
+        _resource = resource;
 
-        StartProcessingCoroutine( ResurceUploaded);
-
-        if (_uploadDelay != null)
-            StopCoroutine(_uploadDelay);
-
-        _uploadDelay = StartCoroutine(UploadDelay());
+        return StartProcessingCoroutine(_resurseParent);
     }
 
-    public void UnloadResurce()
+    public Coroutine UnloadResurce()
     {
-        _animation.PlayProcessing();
-
-        StartProcessingCoroutine( ResurceUnloaded);
-
-        if (_unloadDelay != null)
-            StopCoroutine(_unloadDelay);
-
-        _unloadDelay = StartCoroutine(UnloadDelay());
+        return StartProcessingCoroutine();
     }
 
-    private void StartProcessingCoroutine( Action processing = null)
+    private Coroutine StartProcessingCoroutine(Transform parentPosition = null)
     {
         if (_processingDelay != null)
             StopCoroutine(_processingDelay);
 
-        _processingDelay = StartCoroutine(ProcessingAnimationDelay(processing));
+        return StartCoroutine(ProcessingAnimationDelay(parentPosition));
     }
 
-    private IEnumerator ProcessingAnimationDelay(Action processing)
+    private IEnumerator ProcessingAnimationDelay(Transform parentPosition)
     {
+        yield return _halfProcessingWait;
+
+        _resource.transform.parent = parentPosition;
+
+        if (parentPosition != null)
+        {
+            _resource.transform.localPosition = Vector3.zero;
+        }
+
         yield return _processingWait;
-
-        processing?.Invoke();
-    }
-
-    private IEnumerator UploadDelay()
-    {
-        yield return _transmitWait;
-
-        _resurce.transform.parent = _resurseParent;
-        _resurce.transform.localPosition = Vector3.zero;
-    }
-
-    private IEnumerator UnloadDelay()
-    {
-        yield return _transmitWait;
-
-        _resurce.transform.parent = null;
-        _resurce.GetComponent<Rigidbody>().isKinematic = false;
-        _resurce.Die();
-        _resurce = null;
     }
 }
