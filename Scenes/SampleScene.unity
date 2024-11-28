@@ -528,7 +528,7 @@ MonoBehaviour:
   _resurcePrefab: {fileID: 7533179317061013959, guid: b0900fa93de4777499b7027d5fc2bfb8, type: 3}
   _maxNumberPosition: -70
   _minNumberPosition: 70
-  _spawnDelay: 30
+  _spawnDelay: 12
 --- !u!4 &781709236
 Transform:
   m_ObjectHideFlags: 0
@@ -620,7 +620,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _resurceCountText: {fileID: 2112588389}
-  tower: {fileID: 0}
+  _tower: {fileID: 943762264}
 --- !u!1 &938712047
 GameObject:
   m_ObjectHideFlags: 0
@@ -650,7 +650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a04ef5e7197694348b15b27f6fe9ff44, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _tower: {fileID: 0}
+  _tower: {fileID: 943762264}
 --- !u!4 &938712049
 Transform:
   m_ObjectHideFlags: 0
@@ -1186,7 +1186,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 81c9f4130aeef0649bb306fd71d6253a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _speed: 0
+  _speed: 25
   _rotationSpeed: 80
   _borderScreen: 30
   _zoomSpeed: 10

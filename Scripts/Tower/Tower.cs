@@ -50,6 +50,6 @@ public class Tower : MonoBehaviour
     private void GetResource(Resource resource, Unit unit)
     {
         ResourceReceived?.Invoke(resource);
-        unit.ResourceUnloaded += GetResource;
+        unit.ResourceUnloaded -= GetResource;
     }
 }
