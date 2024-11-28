@@ -46,6 +46,7 @@ public class Unit : MonoBehaviour
         
         yield return _trailer.UnloadResurce(ResourceUnloaded, this);
 
+        resource.Die(); 
         ResourceDelivered?.Invoke(this);
     }
 }
