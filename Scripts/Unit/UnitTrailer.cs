@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class UnitTrailer : MonoBehaviour
@@ -26,20 +27,20 @@ public class UnitTrailer : MonoBehaviour
         return StartProcessingCoroutine(_resurseParent);
     }
 
-    public Coroutine UnloadResurce()
+    public Coroutine UnloadResurce(Action<Resource, Unit> resourceUnloaded, Unit unit)
     {
-        return StartProcessingCoroutine();
+        return StartProcessingCoroutine(null, resourceUnloaded, unit);
     }
 
-    private Coroutine StartProcessingCoroutine(Transform parentPosition = null)
+    private Coroutine StartProcessingCoroutine(Transform parentPosition, Action<Resource, Unit> resourceUnloaded = null, Unit unit = null)
     {
         if (_processingDelay != null)
             StopCoroutine(_processingDelay);
 
-        return StartCoroutine(ProcessingAnimationDelay(parentPosition));
+        return StartCoroutine(ProcessingAnimationDelay(parentPosition, resourceUnloaded, unit));
     }
 
-    private IEnumerator ProcessingAnimationDelay(Transform parentPosition)
+    private IEnumerator ProcessingAnimationDelay(Transform parentPosition, Action<Resource, Unit> resourceUnloaded, Unit unit)
     {
         yield return _halfProcessingWait;
 
@@ -48,6 +49,10 @@ public class UnitTrailer : MonoBehaviour
         if (parentPosition != null)
         {
             _resource.transform.localPosition = Vector3.zero;
+        }
+        else
+        {
+            resourceUnloaded?.Invoke(_resource, unit);
         }
 
         yield return _processingWait;

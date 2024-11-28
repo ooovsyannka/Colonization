@@ -2,6 +2,7 @@
 using System.Collections;
 using TMPro.EditorUtilities;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 using static UnityEngine.UI.CanvasScaler;
 
@@ -14,7 +15,7 @@ public class Unit : MonoBehaviour
     private UnitMover _mover;
 
     public event Action<Unit> ResourceDelivered;
-
+    public event Action<Resource, Unit> ResourceUnloaded;
 
     private void Awake()
     {
@@ -43,7 +44,7 @@ public class Unit : MonoBehaviour
 
         _animation.PlayProcessing();
         
-        yield return _trailer.UnloadResurce();
+        yield return _trailer.UnloadResurce(ResourceUnloaded, this);
 
         ResourceDelivered?.Invoke(this);
     }

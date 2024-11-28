@@ -30,20 +30,16 @@ public class ResurceSpawner : MonoBehaviour
     {
         while (enabled)
         {
-            Resource resource = _spawner.Spawn(NewSpawnPosition());
+            Resource resource = _spawner.Spawn(GetNewSpawnPosition());
             resource.gameObject.SetActive(true);
-            resource.TryGetComponent(out Rigidbody resurceRigidbody);
-            resurceRigidbody.isKinematic = true;
-
-            resource.Died += ReturnResurceInSpawner;
 
             ResurceSpawned?.Invoke(resource);
-            
+
             yield return _spawnWait;
         }
     }
 
-    private Vector3 NewSpawnPosition()
+    private Vector3 GetNewSpawnPosition()
     {
         Vector3 newSpawnPosition = new Vector3(GetRandomNumber(), 0, GetRandomNumber());
 
@@ -51,18 +47,12 @@ public class ResurceSpawner : MonoBehaviour
         return newSpawnPosition;
     }
 
-    private void ReturnResurceInSpawner(Resource resurce)
-    {
-        _spawner.ReturnObjectInPool(resurce);
-        resurce.Died -= ReturnResurceInSpawner;
-    }
-
     private void SetPositionY(ref Vector3 newSpawnPosition)
     {
         if (Physics.Raycast(newSpawnPosition + Vector3.up * _maxRayCastDistance, Vector3.down, out RaycastHit hit, _maxRayCastDistance))
         {
             if (hit.collider.TryGetComponent<Terrain>(out _))
-            {  
+            {
                 newSpawnPosition.y = hit.point.y;
             }
         }

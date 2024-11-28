@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1932563601679328850}
   - component: {fileID: 6139837413231658752}
   - component: {fileID: 5644293536586326079}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: BetterCrystal01 (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -94,7 +94,7 @@ GameObject:
   - component: {fileID: 2074579192641742301}
   - component: {fileID: 2710933614714711376}
   - component: {fileID: 2679535044086098584}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: BetterCrystal01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -177,7 +177,7 @@ GameObject:
   - component: {fileID: 5388906897139893357}
   - component: {fileID: 7599713727601619466}
   - component: {fileID: 5432051790813560127}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: BetterCrystal01 (6)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -260,7 +260,7 @@ GameObject:
   - component: {fileID: 951830529129684294}
   - component: {fileID: 4525426676117205595}
   - component: {fileID: 7942234750417376064}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: BetterCrystal01 (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -343,7 +343,7 @@ GameObject:
   - component: {fileID: 5318012486862058032}
   - component: {fileID: 1588812879740824682}
   - component: {fileID: 5578479600561100427}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: BetterCrystal01 (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -424,7 +424,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3679536531530025654}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: ResurceBody
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -462,9 +462,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1940724423066363509}
+  - component: {fileID: 6176956993942397696}
   - component: {fileID: 2899203485096281816}
   - component: {fileID: 7533179317061013959}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: Resurce
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -487,6 +488,33 @@ Transform:
   - {fileID: 3679536531530025654}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!54 &6176956993942397696
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7933841486557959374}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 1
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0
 --- !u!65 &2899203485096281816
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -520,7 +548,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 348f4b0e2dc47c24a9b1a0bd5eb9b26c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _timeToDie: 2
+  _timeToDie: 10
 --- !u!1 &8109977529599113439
 GameObject:
   m_ObjectHideFlags: 0
@@ -532,7 +560,7 @@ GameObject:
   - component: {fileID: 2646046623797571120}
   - component: {fileID: 2116747726489157860}
   - component: {fileID: 9075515912534472387}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: BetterCrystal01 (4)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -615,7 +643,7 @@ GameObject:
   - component: {fileID: 344245922687945762}
   - component: {fileID: 5469745638465977793}
   - component: {fileID: 2086531943182997023}
-  m_Layer: 8
+  m_Layer: 6
   m_Name: BetterCrystal01 (5)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

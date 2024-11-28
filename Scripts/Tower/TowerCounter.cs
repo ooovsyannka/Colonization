@@ -4,21 +4,21 @@ using UnityEngine;
 public class TowerCounter : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI _resurceCountText;
-    [SerializeField] private TowerCollision _towerCollision;
+    [SerializeField] private Tower _tower;
+
+    private int _resurceCount = 0;
 
     private void OnEnable()
     {
-        _towerCollision.ResurceDetected += ResourceCountUpdate;
+        _tower.ResourceReceived += ResourceCountUpdate;
     }
 
     private void OnDisable()
     {
-        _towerCollision.ResurceDetected -= ResourceCountUpdate;
+        _tower.ResourceReceived -= ResourceCountUpdate;
     }
 
-    private int _resurceCount = 0;
- 
-    public void ResourceCountUpdate(Resource resource)
+    public void ResourceCountUpdate(Resource _)
     {
         _resurceCount++;
         _resurceCountText.text = _resurceCount.ToString();

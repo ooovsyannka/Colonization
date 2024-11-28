@@ -7,6 +7,7 @@ public class Scaner : MonoBehaviour
     [SerializeField] private Vector3 _centrPosition;
     [SerializeField] private Vector3 _scale;
     [SerializeField] private float _scanDelay;
+    [SerializeField] private LayerMask _layerMask;
 
     private WaitForSeconds _scanWait;
 
@@ -26,7 +27,7 @@ public class Scaner : MonoBehaviour
     {
         while (enabled)
         {
-            Collider[] colliders = Physics.OverlapBox(_centrPosition, _scale);
+            Collider[] colliders = Physics.OverlapBox(_centrPosition, _scale, Quaternion.identity, _layerMask);
 
             foreach (Collider collider in colliders)
             {

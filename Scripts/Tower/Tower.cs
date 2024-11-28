@@ -1,3 +1,5 @@
+using System;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 
@@ -6,6 +8,8 @@ public class Tower : MonoBehaviour
     [SerializeField] private Scaner _scaner;
     [SerializeField] private TowerUnitHolder _unitHolder;
     [SerializeField] private TowerResourceHolder _resourceHolder;
+
+    public event Action<Resource> ResourceReceived;
 
     private void OnEnable()
     {
@@ -37,8 +41,15 @@ public class Tower : MonoBehaviour
                 if (_unitHolder.TrySendActiveUnit(out Unit unit))
                 {
                     unit.StartDeliveryResource(resource);
+                    unit.ResourceUnloaded += GetResource;
                 }
             }
         }
+    }
+
+    private void GetResource(Resource resource, Unit unit)
+    {
+        ResourceReceived?.Invoke(resource);
+        unit.ResourceUnloaded += GetResource;
     }
 }

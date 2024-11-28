@@ -3,26 +3,31 @@ using UnityEngine;
 
 public class TowerResourceHolder : MonoBehaviour
 {
-    [SerializeField] private TowerCollision _collision;
+    [SerializeField] private Tower _tower;
 
-    private Dictionary<Resource, bool> _freeResurces;
+    private Dictionary<Resource, bool> _resurces;
 
     private void Awake()
     {
-        _freeResurces = new Dictionary<Resource, bool>();
+        _resurces = new Dictionary<Resource, bool>();
     }
 
     private void OnEnable()
     {
-        _collision.ResurceDetected += RemoveResource;
+        _tower.ResourceReceived += RemoveResource;
+    }
+
+    private void OnDisable()
+    {
+        _tower.ResourceReceived -= RemoveResource;
     }
 
     public bool CanAddResurce(Resource detectedResource)
     {
-        if (_freeResurces.Count == 0)
+        if (_resurces.Count == 0)
             return true;
 
-        if (_freeResurces.ContainsKey(detectedResource))
+        if (_resurces.ContainsKey(detectedResource))
             return false;
 
         return true;
@@ -30,21 +35,21 @@ public class TowerResourceHolder : MonoBehaviour
 
     public void AddResurce(Resource detectedResource)
     {
-        _freeResurces.Add(detectedResource, false);
+        _resurces.Add(detectedResource, false);
     }
 
     public bool TryGetFreeResurce(out Resource desiredResource)
     {
         desiredResource = null;
 
-        if (_freeResurces.Count > 0)
+        if (_resurces.Count > 0)
         {
-            foreach (KeyValuePair<Resource, bool> resource in _freeResurces)
+            foreach (KeyValuePair<Resource, bool> resource in _resurces)
             {
                 if (resource.Value == false)
                 {
                     desiredResource = resource.Key;
-                    _freeResurces[desiredResource] = true;
+                    _resurces[desiredResource] = true;
 
                     return true;
                 }
@@ -56,6 +61,6 @@ public class TowerResourceHolder : MonoBehaviour
 
     private void RemoveResource(Resource resource)
     {
-        _freeResurces.Remove(resource);
+        _resurces.Remove(resource);
     }
 }

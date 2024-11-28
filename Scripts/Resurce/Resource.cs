@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Collider), typeof(Rigidbody))]
 
-public class Resource : MonoBehaviour
+public class Resource : MonoBehaviour, IPooledObject
 {
     [SerializeField] private float _timeToDie;
 
@@ -30,6 +30,7 @@ public class Resource : MonoBehaviour
     {
         yield return _dieDelayWait;
 
+        gameObject.SetActive(false);
         Died?.Invoke(this);
     }
 }
